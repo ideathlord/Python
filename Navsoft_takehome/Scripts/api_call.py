@@ -1,3 +1,4 @@
+import getpass
 import json
 import os
 import urllib.error
@@ -6,12 +7,10 @@ import urllib.request
 
 import pandas as pd
 
-API_KEY = os.environ.get("FRED_API_KEY")
-
 cache = {}
 
 
-def fetch_data(series_id, save_path):
+def fetch_data(series_id, save_path, api_key):
     # Always save to the 'data' directory inside the project, using only the basename
     base_dir = os.path.join(os.path.dirname(__file__), "..", "data")
     os.makedirs(base_dir, exist_ok=True)
@@ -23,13 +22,13 @@ def fetch_data(series_id, save_path):
         print(f"Using cached data for series_id: {series_id}")
         return cache[series_id]
 
-    if not API_KEY:
-        raise RuntimeError("FRED_API_KEY environment variable is not set")
+    if not api_key:
+        raise ValueError("A FRED API key is required")
 
     base_url = "https://api.stlouisfed.org/fred/series/observations"
     params = {
         "series_id": series_id,
-        "api_key": API_KEY,
+        "api_key": api_key,
         "file_type": "json",
     }
     url = base_url + "?" + urllib.parse.urlencode(params)
@@ -60,6 +59,7 @@ def fetch_data(series_id, save_path):
 
 
 if __name__ == "__main__":
-    fetch_data("GASREGW", "data/gas_prices.csv")
-    fetch_data("CPIAUCSL", "data/cpi_data.csv")
+    api_key = getpass.getpass("Enter your FRED API key: ").strip()
+    fetch_data("GASREGW", "data/gas_prices.csv", api_key)
+    fetch_data("CPIAUCSL", "data/cpi_data.csv", api_key)
     print("fred downloaded")
