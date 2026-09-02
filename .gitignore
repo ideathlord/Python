@@ -1,0 +1,24 @@
+# Python virtual environments
+env/
+.venv/
+venv/
+env-python39-backup/
+ENV/
+
+# Python cache / build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Local IDE / OS files
+.DS_Store
+.vscode/
+.idea/
