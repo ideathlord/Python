@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Downloader</title>
+  <style>
+    body {
+      width: 300px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f0f0f;
+      color: #f1f1f1;
+      padding: 16px;
+      margin: 0;
+    }
+    h1 {
+      font-size: 15px;
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+    #video-title {
+      font-size: 12px;
+      color: #aaaaaa;
+      margin-bottom: 14px;
+      line-height: 1.4;
+      max-height: 40px;
+      overflow: hidden;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    select {
+      flex: 1;
+      background: #1f1f1f;
+      color: #f1f1f1;
+      border: 1px solid #3a3a3a;
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 13px;
+    }
+    label.toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #cccccc;
+      margin-bottom: 12px;
+    }
+    button {
+      width: 100%;
+      background: #ff0000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #7a1f1f;
+      cursor: default;
+    }
+    button:hover:not(:disabled) {
+      background: #d90000;
+    }
+    #status {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #aaaaaa;
+      text-align: center;
+      min-height: 16px;
+    }
+    #status.error {
+      color: #ff6b6b;
+    }
+    #status.success {
+      color: #4caf50;
+    }
+  </style>
+</head>
+<body>
+  <h1>YouTube Downloader</h1>
+  <div id="video-title">Detecting current video…</div>
+
+  <div class="row">
+    <select id="quality">
+      <option value="1080">1080p</option>
+      <option value="720">720p</option>
+      <option value="480">480p</option>
+    </select>
+  </div>
+
+  <label class="toggle">
+    <input type="checkbox" id="audio-only" />
+    Audio only (mp3)
+  </label>
+
+  <button id="download-btn">Download</button>
+  <div id="status"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
