@@ -1,0 +1,7 @@
+pandas
+numpy
+faker
+scikit-learn
+matplotlib
+seaborn
+mlflow
