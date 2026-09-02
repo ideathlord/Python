@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/abhishekvishwakarma/Python/mlruns/0/3c59e4cc3610411b9182f3e1f704d5ef/artifacts
+end_time: 1769430404212
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3c59e4cc3610411b9182f3e1f704d5ef
+run_name: aged-turtle-290
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1769430404202
+status: 3
+tags: []
+user_id: abhishekvishwakarma

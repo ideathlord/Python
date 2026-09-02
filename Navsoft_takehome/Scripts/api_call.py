@@ -4,17 +4,18 @@ import json
 import pandas as pd
 import os
 
-API_KEY = "YOUR_APIKEY_HERE"
+API_KEY = "ef9a748ee6c2d209d2099fb50e9f07f1"
 
 cache = {}
 
 def fetch_data(series_id, save_path):
+    # Always save to the 'data' directory inside the project, using only the basename
     base_dir = os.path.join(os.path.dirname(__file__), '..', 'data')
     os.makedirs(base_dir, exist_ok=True)
     filename = os.path.basename(save_path)
     save_path = os.path.join(base_dir, filename)
     print(f"Saving file to: {save_path}")
-    
+
     if series_id in cache:
         print(f"Using cached data for series_id: {series_id}")
         return cache[series_id]
@@ -25,8 +26,6 @@ def fetch_data(series_id, save_path):
         "file_type": "json"
     }
     url = base_url + "?" + urllib.parse.urlencode(params)
-
-    #Handling Api and URL errors
     try:
         with urllib.request.urlopen(url) as resp:
             j = json.load(resp)
@@ -43,7 +42,7 @@ def fetch_data(series_id, save_path):
     df["value"] = pd.to_numeric(df["value"], errors='coerce')
     try:
         cache[series_id] = df
-        df.to_csv(save_path, index=False)  # Save DataFrame to CSV
+        df.to_csv(save_path, index=False)
     except IOError as e:
         print(f"Error saving file {save_path}: {e}")
     return df
