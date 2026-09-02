@@ -39,7 +39,7 @@ def fetch_data(series_id, save_path):
 
     try:
         request = urllib.request.Request(url, method="GET")
-        with urllib.request.urlopen(request) as resp:
+        with urllib.request.build_opener().open(request, timeout=30) as resp:
             j = json.load(resp)
             obs = j.get("observations", [])
     except urllib.error.HTTPError as e:
