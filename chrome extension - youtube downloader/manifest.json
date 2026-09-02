@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Downloader (Local)",
+  "version": "1.0.0",
+  "description": "Download the current YouTube video via your local yt-dlp server.",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab"],
+  "host_permissions": [
+    "http://127.0.0.1:5005/*",
+    "*://*.youtube.com/*",
+    "*://youtu.be/*"
+  ]
+}
