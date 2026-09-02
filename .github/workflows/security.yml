@@ -75,7 +75,9 @@ jobs:
 
           while IFS= read -r manifest; do
             case "$manifest" in
-              *.txt|*.in) echo "Auditing $manifest"; pip-audit -r "$manifest" ;;
+              *.txt|*.in) echo "Auditing $manifest"; \
+                # Temporarily ignore MLflow CVE-2026-71211 until upstream provides a patch. See: https://advisories.gitlab.com/pypi/mlflow/CVE-2026-71211/
+                pip-audit -r "$manifest" --ignore CVE-2026-71211 ;; \
               *) echo "Found $manifest; pip-audit currently audits installed environments or requirements files, so review this lockfile with the project's package manager." ;;
             esac
           done <<< "$manifests"
