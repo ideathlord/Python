@@ -5,4 +5,4 @@ scikit-learn
 matplotlib
 seaborn
 mlflow==3.12.0
-cryptography>=50,<51
+cryptography==48.0.1
