@@ -1,0 +1,81 @@
+name: Python Security Checks
+
+on:
+  pull_request:
+    branches: ["leetcode_dev"]
+  push:
+    branches: ["leetcode_dev"]
+
+permissions:
+  contents: read
+
+jobs:
+  security:
+    name: Security checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install security tools
+        run: python -m pip install --upgrade pip bandit pip-audit
+
+      - name: Compile Python files
+        run: |
+          python - <<'PY'
+          import pathlib
+          import py_compile
+
+          ignored = {".git", ".venv", "venv", "env", "env-python39-backup", "__pycache__"}
+          files = [
+              p for p in pathlib.Path(".").rglob("*.py")
+              if not any(part in ignored for part in p.parts)
+          ]
+
+          print(f"Checking {len(files)} Python files")
+          for path in files:
+              py_compile.compile(str(path), doraise=True)
+          PY
+
+      - name: Run Bandit
+        run: bandit -r . -ll -ii --exclude ./.git,./.venv,./venv,./env,./env-python39-backup
+
+      - name: Check for committed secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git grep -n -I -E '(-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9_]{20,}|AIza[0-9A-Za-z_-]{30,}|xox[baprs]-[0-9A-Za-z-]{10,})' -- . ':(exclude).git/*'; then
+            echo "Potential credential or private-key material found in tracked files."
+            exit 1
+          fi
+
+      - name: Audit Python dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifests=$(find . -type f \( -name 'requirements*.txt' -o -name 'requirements*.in' -o -name 'Pipfile.lock' -o -name 'poetry.lock' \) \
+            -not -path './.git/*' \
+            -not -path './.venv/*' \
+            -not -path './venv/*' \
+            -not -path './env/*' \
+            -not -path './env-python39-backup/*')
+
+          if [ -z "$manifests" ]; then
+            echo "No supported dependency manifest found; skipping pip-audit."
+            exit 0
+          fi
+
+          while IFS= read -r manifest; do
+            case "$manifest" in
+              *.txt|*.in) echo "Auditing $manifest"; pip-audit -r "$manifest" ;;
+              *) echo "Found $manifest; pip-audit currently audits installed environments or requirements files, so review this lockfile with the project's package manager." ;;
+            esac
+          done <<< "$manifests"
