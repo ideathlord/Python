@@ -1,3 +1,4 @@
+pip requirements
 pandas
 numpy
 faker
@@ -5,3 +6,6 @@ scikit-learn
 matplotlib
 seaborn
 mlflow
+
+# Pin cryptography to a secure release to address PYSEC-2026-3552
+cryptography==50.0.0
