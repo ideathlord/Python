@@ -1,7 +1,10 @@
+import logging
+
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics.pairwise import cosine_similarity
-import mlflow
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 interactions = pd.read_csv("data/processed/interactions_clean.csv")
 
@@ -16,13 +19,12 @@ user_item_matrix = pd.pivot_table(
     index="user_enc",
     columns="item_enc",
     aggfunc="size",
-    fill_value=0
+    fill_value=0,
 )
 
 similarity = cosine_similarity(user_item_matrix)
 
-with mlflow.start_run():
-    mlflow.log_metric("num_users", user_item_matrix.shape[0])
-    mlflow.log_metric("num_items", user_item_matrix.shape[1])
+logging.info("num_users=%d", user_item_matrix.shape[0])
+logging.info("num_items=%d", user_item_matrix.shape[1])
 
-print("✅ Model trained & tracked")
+print("✅ Model trained & metrics logged")
