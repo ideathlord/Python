@@ -10,7 +10,7 @@ let currentUrl = null;
 let pollTimer = null;
 
 function isYouTubeUrl(url) {
-  return /^https?:\/\/(www\.)?(youtube\.com\/watch|youtu\.be\/|m\.youtube\.com\/watch)/.test(
+  return /^https?:\/\/(www\.)?(youtube\.com\/(watch|shorts\/)|youtu\.be\/|m\.youtube\.com\/(watch|shorts\/))/.test(
     url
   );
 }
@@ -26,6 +26,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   if (tab && tab.url && isYouTubeUrl(tab.url)) {
     currentUrl = tab.url;
     titleEl.textContent = tab.title || currentUrl;
+    if (/\/shorts\//.test(currentUrl)) {
+      titleEl.textContent = `🩳 Short: ${titleEl.textContent}`;
+    }
   } else {
     titleEl.textContent = "Not a YouTube video page.";
     btn.disabled = true;

@@ -1,4 +1,4 @@
-# YouTube Downloader — Chrome Extension + Local Server
+clear# YouTube Downloader — Chrome Extension + Local Server
 
 This adds a browser popup with a Download button, backed by a local Python
 server running yt-dlp (the extension itself can't run Python/ffmpeg — browser
